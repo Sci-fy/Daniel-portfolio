@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MrNels Productions | Daniel T Megan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&family=Abril+Fatface&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Bebas Neue', 'cursive'],
+        serif: ['Playfair Display', 'serif'],
+        body: ['Outfit', 'sans-serif'],
+        accent: ['Abril Fatface', 'cursive'],
+      },
+      colors: {
+        brand: {
+          cyan: '#00e5ff',
+          gold: '#f0b429',
+          fire: '#ff4d1c',
+          dark: '#05080d',
+          card: '#0d1520',
+          border: '#1a2840',
+        }
+      },
+      animation: {
+        'fade-up': 'fadeUp 0.9s ease both',
+        'fade-in': 'fadeIn 1.2s ease both',
+        'float': 'float 6s ease-in-out infinite',
+        'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+        'slide-x': 'slideX 30s linear infinite',
+      },
+      keyframes: {
+        fadeUp: { from:{opacity:'0',transform:'translateY(40px)'}, to:{opacity:'1',transform:'translateY(0)'} },
+        fadeIn: { from:{opacity:'0'}, to:{opacity:'1'} },
+        float: { '0%,100%':{transform:'translateY(0)'}, '50%':{transform:'translateY(-18px)'} },
+        glowPulse: { '0%,100%':{boxShadow:'0 0 20px rgba(0,229,255,0.2)'}, '50%':{boxShadow:'0 0 60px rgba(0,229,255,0.5)'} },
+        slideX: { from:{transform:'translateX(0)'}, to:{transform:'translateX(-50%)'} },
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Outfit', sans-serif; background: #05080d; color: #e2eaf5; }
+  .font-display { font-family: 'Bebas Neue', cursive; }
+  .font-serif-custom { font-family: 'Playfair Display', serif; }
+  .font-accent { font-family: 'Abril Fatface', cursive; }
+
+  /* Noise texture */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+
+  /* Grid background */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Glowing text */
+  .glow-cyan { text-shadow: 0 0 40px rgba(0,229,255,0.4); }
+  .glow-gold { text-shadow: 0 0 40px rgba(240,180,41,0.4); }
+
+  /* Stroke text */
+  .text-stroke {
+    -webkit-text-stroke: 2px rgba(0,229,255,0.6);
+    color: transparent;
+  }
+  .text-stroke-white {
+    -webkit-text-stroke: 1.5px rgba(255,255,255,0.3);
+    color: transparent;
+  }
+
+  /* Image tilt */
+  .tilt-card {
+    transition: transform 0.4s ease;
+    transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+  }
+  .tilt-card:hover {
+    transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+  }
+
+  /* Category card hover */
+  .cat-card {
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    background: #0d1520;
+    border: 1px solid #1a2840;
+  }
+  .cat-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(0,229,255,0.35);
+    background: #111e30;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,255,0.1);
+  }
+  .cat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, #00e5ff, #f0b429);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .cat-card:hover::before { transform: scaleX(1); }
+
+  /* Scrolling ticker */
+  .ticker-track { animation: slideX 28s linear infinite; }
+  .ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #05080d; }
+  ::-webkit-scrollbar-thumb { background: #00e5ff; border-radius: 2px; }
+
+  /* Nav active link */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1.5px; background: #00e5ff;
+    transform: scaleX(0); transition: transform 0.25s;
+  }
+  .nav-link:hover::after { transform: scaleX(1); }
+
+  /* Delay utilities */
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+  .delay-500 { animation-delay: 0.5s; }
+  .delay-700 { animation-delay: 0.7s; }
+
+  /* Profile ring */
+  .profile-ring {
+    background: conic-gradient(#00e5ff 0%, #f0b429 40%, #ff4d1c 70%, #00e5ff 100%);
+    padding: 4px; border-radius: 50%;
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%,100% { box-shadow: 0 0 20px rgba(0,229,255,0.3); }
+    50% { box-shadow: 0 0 60px rgba(0,229,255,0.6), 0 0 100px rgba(240,180,41,0.3); }
+  }
+</style>
+</head>
+<body class="overflow-x-hidden">
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5"
+     style="background: linear-gradient(to bottom, rgba(5,8,13,0.97), transparent); backdrop-filter: blur(8px);">
+  <a href="index.html" class="font-display text-2xl tracking-widest text-[#00e5ff]">MRNELS</a>
+  <div class="hidden md:flex items-center gap-10">
+    <a href="index.html" class="nav-link text-[#00e5ff] text-xs font-semibold tracking-[0.2em] uppercase">Home</a>
+    <a href="portfolio.html" class="nav-link text-slate-400 hover:text-white text-xs font-semibold tracking-[0.2em] uppercase transition-colors">Portfolio</a>
+    <a href="about.html" class="nav-link text-slate-400 hover:text-white text-xs font-semibold tracking-[0.2em] uppercase transition-colors">About</a>
+    <a href="index.html#contact" class="nav-link text-slate-400 hover:text-white text-xs font-semibold tracking-[0.2em] uppercase transition-colors">Contact</a>
+  </div>
+  <a href="tel:09032680961"
+     class="bg-[#00e5ff] text-[#05080d] px-5 py-2.5 text-xs font-bold tracking-[0.15em] uppercase
+            hover:bg-[#f0b429] transition-colors duration-200">
+    📞 Book Now
+  </a>
+</nav>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="relative min-h-screen flex items-center grid-bg overflow-hidden pt-24">
+
+  <!-- Background glows -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full opacity-[0.06]"
+         style="background: radial-gradient(circle, #00e5ff, transparent 70%)"></div>
+    <div class="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] rounded-full opacity-[0.04]"
+         style="background: radial-gradient(circle, #f0b429, transparent 70%)"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-8 w-full py-20">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- LEFT: TEXT -->
+      <div>
+        <div class="flex items-center gap-3 mb-6 animate-fade-up">
+          <span class="w-8 h-px bg-[#00e5ff]"></span>
+          <span class="text-[#00e5ff] text-xs font-semibold tracking-[0.3em] uppercase">Yola, Nigeria · Available Nationwide</span>
+        </div>
+
+        <h1 class="font-display leading-none mb-4 animate-fade-up delay-100">
+          <span class="block text-[clamp(56px,9vw,120px)] text-white glow-cyan tracking-wider">DANIEL T</span>
+          <span class="block text-[clamp(56px,9vw,120px)] text-stroke tracking-wider">MEGAN</span>
+        </h1>
+
+        <p class="font-accent text-[#f0b429] text-xl md:text-2xl mb-6 animate-fade-up delay-200 glow-gold">
+          Digital Creator · Visual Storyteller
+        </p>
+
+        <p class="text-slate-400 text-base leading-relaxed max-w-xl mb-8 animate-fade-up delay-300" style="font-family:'Outfit',sans-serif; font-weight:300;">
+          When I was 15 I fell in love with capturing memories. Years later, I'm making a living with my lens — and the love for authentic storytelling hasn't changed. I don't document your story, I <span class="text-white font-medium">join it</span>, craft it, and make it <span class="text-[#00e5ff] font-medium">impossible to forget.</span>
+        </p>
+
+        <!-- Skill pills -->
+        <div class="flex flex-wrap gap-2 mb-10 animate-fade-up delay-500">
+          <span class="px-3 py-1.5 text-xs font-semibold tracking-widest uppercase border border-[#1a2840] text-slate-300 bg-[#0d1520]">🎬 Video Editor</span>
+          <span class="px-3 py-1.5 text-xs font-semibold tracking-widest uppercase border border-[#1a2840] text-slate-300 bg-[#0d1520]">🎨 Graphic Design</span>
+          <span class="px-3 py-1.5 text-xs font-semibold tracking-widest uppercase border border-[#1a2840] text-slate-300 bg-[#0d1520]">📸 Event Coverage</span>
+          <span class="px-3 py-1.5 text-xs font-semibold tracking-widest uppercase border border-[#1a2840] text-slate-300 bg-[#0d1520]">💻 Web Developer</span>
+        </div>
+
+        <div class="flex gap-4 flex-wrap animate-fade-up delay-700">
+          <a href="portfolio.html"
+             class="bg-[#00e5ff] text-[#05080d] px-8 py-4 font-bold text-sm tracking-[0.1em] uppercase
+                    hover:bg-[#f0b429] transition-all duration-200 hover:-translate-y-1
+                    shadow-[0_0_30px_rgba(0,229,255,0.25)]">
+            View My Work ↗
+          </a>
+          <a href="#contact"
+             class="border border-[#1a2840] text-white px-8 py-4 font-medium text-sm tracking-[0.1em] uppercase
+                    hover:border-[#00e5ff] hover:text-[#00e5ff] transition-all duration-200">
+            Get In Touch
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="flex gap-10 mt-12 pt-10 border-t border-[#1a2840] animate-fade-up delay-700">
+          <div>
+            <div class="font-display text-4xl text-[#00e5ff] tracking-wide">894</div>
+            <div class="text-slate-500 text-xs tracking-widest uppercase mt-1">Followers</div>
+          </div>
+          <div>
+            <div class="font-display text-4xl text-[#00e5ff] tracking-wide">130+</div>
+            <div class="text-slate-500 text-xs tracking-widest uppercase mt-1">Posts</div>
+          </div>
+          <div>
+            <div class="font-display text-4xl text-[#00e5ff] tracking-wide">5+</div>
+            <div class="text-slate-500 text-xs tracking-widest uppercase mt-1">Skills</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: IMAGE -->
+      <div class="relative flex justify-center animate-fade-in delay-300">
+
+        <!-- Background decorative rings -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="w-[400px] h-[400px] rounded-full border border-[rgba(0,229,255,0.08)] animate-[spin_25s_linear_infinite]"></div>
+          <div class="absolute w-[320px] h-[320px] rounded-full border border-[rgba(240,180,41,0.06)] animate-[spin_18s_linear_infinite_reverse]"></div>
+        </div>
+
+        <!-- Profile image -->
+        <div class="relative animate-float">
+          <div class="profile-ring w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full">
+            <div class="w-full h-full rounded-full overflow-hidden bg-[#0d1520]">
+              <img src="news.jpg"
+                   alt="Daniel T Megan"
+                   class="w-full h-full object-cover object-center"/>
+            </div>
+          </div>
+
+          <!-- Floating badges -->
+          <div class="absolute -bottom-4 -left-8 bg-[#0d1520] border border-[#1a2840] px-4 py-3 animate-float"
+               style="animation-delay:1s; box-shadow: 0 0 30px rgba(0,229,255,0.1)">
+            <div class="text-[#00e5ff] font-display text-2xl">CEO</div>
+            <div class="text-slate-400 text-xs tracking-widest">MrNels Productions</div>
+          </div>
+
+          <div class="absolute -top-4 -right-8 bg-[#f0b429] px-4 py-3 animate-float"
+               style="animation-delay:2s">
+            <div class="text-[#05080d] font-bold text-xs tracking-widest uppercase">Digital Creator</div>
+            <div class="text-[#05080d] text-xs opacity-70">Yola, Nigeria</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom scroll hint -->
+  <div class="absolute bottom-8 left-8 flex items-center gap-3 text-slate-500 text-xs tracking-[0.2em] uppercase">
+    <span class="w-12 h-px bg-slate-600 animate-pulse"></span> Scroll
+  </div>
+</section>
+
+<!-- ═══════════════════════ TICKER ═══════════════════════ -->
+<div class="ticker-wrap overflow-hidden border-y border-[#1a2840] py-4 bg-[#0d1520]">
+  <div class="ticker-track flex gap-16 w-max">
+    <template id="tickerItems">
+      <span class="font-display text-2xl tracking-widest text-slate-600 whitespace-nowrap">🎬 VIDEO EDITING</span>
+      <span class="text-[#00e5ff]">✦</span>
+      <span class="font-display text-2xl tracking-widest text-slate-600 whitespace-nowrap">📸 EVENT COVERAGE</span>
+      <span class="text-[#00e5ff]">✦</span>
+      <span class="font-display text-2xl tracking-widest text-slate-600 whitespace-nowrap">🎨 GRAPHIC DESIGN</span>
+      <span class="text-[#00e5ff]">✦</span>
+      <span class="font-display text-2xl tracking-widest text-slate-600 whitespace-nowrap">💻 WEB DEVELOPMENT</span>
+      <span class="text-[#00e5ff]">✦</span>
+      <span class="font-display text-2xl tracking-widest text-slate-600 whitespace-nowrap">📡 BRAND COMMERCIALS</span>
+      <span class="text-[#00e5ff]">✦</span>
+      <span class="font-display text-2xl tracking-widest text-slate-600 whitespace-nowrap">📱 SOCIAL MEDIA</span>
+      <span class="text-[#00e5ff]">✦</span>
+    </template>
+    <script>
+      const t = document.getElementById('tickerItems');
+      const wrap = t.parentElement;
+      const content = t.innerHTML + t.innerHTML + t.innerHTML + t.innerHTML;
+      wrap.innerHTML = content;
+    </script>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CATEGORIES ═══════════════════════ -->
+<section class="py-28 px-8 max-w-7xl mx-auto" id="categories">
+  <div class="flex items-center gap-3 mb-4">
+    <span class="w-6 h-px bg-[#00e5ff]"></span>
+    <span class="text-[#00e5ff] text-xs font-semibold tracking-[0.28em] uppercase">What I Do</span>
+  </div>
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+    <h2 class="font-serif-custom text-5xl md:text-6xl font-black text-white leading-tight">
+      My <em class="text-[#00e5ff] not-italic" style="-webkit-text-stroke:1px #00e5ff;color:transparent">Service</em><br/>Categories
+    </h2>
+    <a href="portfolio.html" class="text-[#00e5ff] text-sm font-semibold tracking-widest uppercase border-b border-[#00e5ff] pb-1 hover:text-[#f0b429] hover:border-[#f0b429] transition-colors self-end">
+      See All Work ↗
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+    <!-- 1. Video Editing -->
+    <div class="cat-card relative rounded-none p-8 cursor-pointer group" onclick="window.location='portfolio.html#video'">
+      <div class="font-display text-6xl text-[rgba(0,229,255,0.07)] mb-5 leading-none">01</div>
+      <span class="text-4xl mb-4 block">🎬</span>
+      <h3 class="font-serif-custom text-xl font-bold text-white mb-3 group-hover:text-[#00e5ff] transition-colors">Video Editing</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-5" style="font-weight:300">Cinematic cuts, color grading, motion graphics, and audio sync. Raw footage transformed into emotional masterpieces.</p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Music Videos</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Wedding Films</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Reels</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">YouTube</span>
+      </div>
+      <div class="flex items-center gap-2 text-[#00e5ff] text-xs font-semibold tracking-widest uppercase">
+        <span>Explore</span><span class="group-hover:translate-x-2 transition-transform inline-block">→</span>
+      </div>
+    </div>
+
+    <!-- 2. Event Coverage -->
+    <div class="cat-card relative rounded-none p-8 cursor-pointer group" onclick="window.location='portfolio.html#events'">
+      <div class="font-display text-6xl text-[rgba(240,180,41,0.07)] mb-5 leading-none">02</div>
+      <span class="text-4xl mb-4 block">📸</span>
+      <h3 class="font-serif-custom text-xl font-bold text-white mb-3 group-hover:text-[#f0b429] transition-colors">Event Coverage</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-5" style="font-weight:300">Full videography and photography coverage for every event. I show up, I capture, I deliver memories that last forever.</p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Weddings</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Birthdays</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Conferences</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Real Estate</span>
+      </div>
+      <div class="flex items-center gap-2 text-[#f0b429] text-xs font-semibold tracking-widest uppercase">
+        <span>Explore</span><span class="group-hover:translate-x-2 transition-transform inline-block">→</span>
+      </div>
+    </div>
+
+    <!-- 3. Graphic Design -->
+    <div class="cat-card relative rounded-none p-8 cursor-pointer group" onclick="window.location='portfolio.html#design'">
+      <div class="font-display text-6xl text-[rgba(255,77,28,0.07)] mb-5 leading-none">03</div>
+      <span class="text-4xl mb-4 block">🎨</span>
+      <h3 class="font-serif-custom text-xl font-bold text-white mb-3 group-hover:text-[#ff4d1c] transition-colors">Graphic Design</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-5" style="font-weight:300">Bold visuals for brands, social media, posters, and logos. Designed to stop the scroll and communicate instantly.</p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Logos</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Flyers</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Brand Kits</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Social Media</span>
+      </div>
+      <div class="flex items-center gap-2 text-[#ff4d1c] text-xs font-semibold tracking-widest uppercase">
+        <span>Explore</span><span class="group-hover:translate-x-2 transition-transform inline-block">→</span>
+      </div>
+    </div>
+
+    <!-- 4. Website Development -->
+    <div class="cat-card relative rounded-none p-8 cursor-pointer group" onclick="window.location='portfolio.html#web'">
+      <div class="font-display text-6xl text-[rgba(0,229,255,0.07)] mb-5 leading-none">04</div>
+      <span class="text-4xl mb-4 block">💻</span>
+      <h3 class="font-serif-custom text-xl font-bold text-white mb-3 group-hover:text-[#00e5ff] transition-colors">Website Development</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-5" style="font-weight:300">Fast, modern, mobile-friendly websites. Your digital home built to impress clients and convert visitors into paying customers.</p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Portfolio Sites</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Business Sites</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Landing Pages</span>
+      </div>
+      <div class="flex items-center gap-2 text-[#00e5ff] text-xs font-semibold tracking-widest uppercase">
+        <span>Explore</span><span class="group-hover:translate-x-2 transition-transform inline-block">→</span>
+      </div>
+    </div>
+
+    <!-- 5. Brand Commercials -->
+    <div class="cat-card relative rounded-none p-8 cursor-pointer group" onclick="window.location='portfolio.html#brand'">
+      <div class="font-display text-6xl text-[rgba(240,180,41,0.07)] mb-5 leading-none">05</div>
+      <span class="text-4xl mb-4 block">📡</span>
+      <h3 class="font-serif-custom text-xl font-bold text-white mb-3 group-hover:text-[#f0b429] transition-colors">Brand Commercials</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-5" style="font-weight:300">Cinematic brand ads and product videos. Premium pacing, unforgettable narratives — built to sell and inspire.</p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Ads</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Promos</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Corporate</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Product Videos</span>
+      </div>
+      <div class="flex items-center gap-2 text-[#f0b429] text-xs font-semibold tracking-widest uppercase">
+        <span>Explore</span><span class="group-hover:translate-x-2 transition-transform inline-block">→</span>
+      </div>
+    </div>
+
+    <!-- 6. Social Media Content -->
+    <div class="cat-card relative rounded-none p-8 cursor-pointer group" onclick="window.location='portfolio.html#social'">
+      <div class="font-display text-6xl text-[rgba(255,77,28,0.07)] mb-5 leading-none">06</div>
+      <span class="text-4xl mb-4 block">📱</span>
+      <h3 class="font-serif-custom text-xl font-bold text-white mb-3 group-hover:text-[#ff4d1c] transition-colors">Social Media Content</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-5" style="font-weight:300">Viral-ready content for every platform. Reels, TikToks, YouTube Shorts, and captions that grow your audience daily.</p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Instagram</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">TikTok</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">YouTube Shorts</span>
+        <span class="text-xs px-2 py-1 border border-[#1a2840] text-slate-400">Facebook</span>
+      </div>
+      <div class="flex items-center gap-2 text-[#ff4d1c] text-xs font-semibold tracking-widest uppercase">
+        <span>Explore</span><span class="group-hover:translate-x-2 transition-transform inline-block">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CTA BANNER ═══════════════════════ -->
+<section class="relative overflow-hidden border-y border-[#1a2840]" style="background:#0d1520">
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full opacity-[0.07]"
+         style="background:radial-gradient(circle, #00e5ff, transparent 70%)"></div>
+  </div>
+  <div class="max-w-5xl mx-auto px-8 py-24 text-center relative">
+    <p class="text-[#00e5ff] text-xs font-semibold tracking-[0.3em] uppercase mb-6">Ready to create something epic?</p>
+    <h2 class="font-display text-[clamp(48px,8vw,96px)] text-white tracking-widest leading-none mb-8">
+      LET'S <span class="text-stroke">MAKE</span><br/>MAGIC
+    </h2>
+    <p class="text-slate-400 max-w-lg mx-auto mb-10 leading-relaxed" style="font-weight:300">
+      One conversation can change everything. Book Daniel T Megan today and turn your vision into something the world won't forget.
+    </p>
+    <div class="flex gap-4 justify-center flex-wrap">
+      <a href="tel:09032680961"
+         class="bg-[#ff4d1c] text-white px-10 py-4 font-bold text-sm tracking-[0.1em] uppercase
+                hover:bg-[#e03a0a] transition-all hover:-translate-y-1
+                shadow-[0_0_40px_rgba(255,77,28,0.3)]">
+        📞 Call: 09032680961
+      </a>
+      <a href="https://wa.me/2349032680961" target="_blank"
+         class="bg-[#25d366] text-white px-10 py-4 font-bold text-sm tracking-[0.1em] uppercase
+                hover:bg-[#1ab354] transition-all hover:-translate-y-1">
+        💬 WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CONTACT ═══════════════════════ -->
+<section class="py-28 px-8 max-w-7xl mx-auto" id="contact">
+  <div class="flex items-center gap-3 mb-4">
+    <span class="w-6 h-px bg-[#00e5ff]"></span>
+    <span class="text-[#00e5ff] text-xs font-semibold tracking-[0.28em] uppercase">Get In Touch</span>
+  </div>
+  <h2 class="font-serif-custom text-5xl font-black text-white mb-16">Book a <em class="italic text-[#00e5ff]">Session</em></h2>
+
+  <div class="grid md:grid-cols-2 gap-16 items-start">
+    <!-- Contact Info -->
+    <div class="space-y-8">
+      <div class="flex gap-5 pb-8 border-b border-[#1a2840]">
+        <div class="w-12 h-12 flex-shrink-0 bg-[rgba(0,229,255,0.06)] border border-[rgba(0,229,255,0.12)] flex items-center justify-center text-xl">📞</div>
+        <div>
+          <div class="font-serif-custom font-bold text-white mb-1">Phone / WhatsApp</div>
+          <a href="tel:09032680961" class="text-slate-400 hover:text-[#00e5ff] transition-colors text-sm block">09032680961</a>
+          <a href="https://wa.me/2349032680961" class="text-slate-400 hover:text-[#00e5ff] transition-colors text-sm block">Chat on WhatsApp →</a>
+        </div>
+      </div>
+      <div class="flex gap-5 pb-8 border-b border-[#1a2840]">
+        <div class="w-12 h-12 flex-shrink-0 bg-[rgba(0,229,255,0.06)] border border-[rgba(0,229,255,0.12)] flex items-center justify-center text-xl">✉️</div>
+        <div>
+          <div class="font-serif-custom font-bold text-white mb-1">Email</div>
+          <a href="mailto:Hello@mrnelsshotit" class="text-slate-400 hover:text-[#00e5ff] transition-colors text-sm">Hello@mrnelsshotit</a>
+        </div>
+      </div>
+      <div class="flex gap-5 pb-8 border-b border-[#1a2840]">
+        <div class="w-12 h-12 flex-shrink-0 bg-[rgba(0,229,255,0.06)] border border-[rgba(0,229,255,0.12)] flex items-center justify-center text-xl">📍</div>
+        <div>
+          <div class="font-serif-custom font-bold text-white mb-1">Location</div>
+          <p class="text-slate-400 text-sm">Yola, Adamawa State, Nigeria</p>
+          <p class="text-slate-500 text-xs mt-1">Available nationwide for all projects</p>
+        </div>
+      </div>
+      <div class="flex gap-5">
+        <div class="w-12 h-12 flex-shrink-0 bg-[rgba(240,180,41,0.06)] border border-[rgba(240,180,41,0.12)] flex items-center justify-center text-xl">🕐</div>
+        <div>
+          <div class="font-serif-custom font-bold text-white mb-1">Response Time</div>
+          <p class="text-slate-400 text-sm">Within 2–4 hours · Mon–Sat · 8am–9pm</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form onsubmit="handleSubmit(event)" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold tracking-[0.18em] uppercase text-slate-500 mb-2">Your Name</label>
+          <input type="text" placeholder="John Doe" required
+                 class="w-full bg-[#0d1520] border border-[#1a2840] px-4 py-3 text-white text-sm outline-none
+                        focus:border-[#00e5ff] transition-colors" style="font-family:'Outfit',sans-serif"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold tracking-[0.18em] uppercase text-slate-500 mb-2">Phone</label>
+          <input type="tel" placeholder="+234..."
+                 class="w-full bg-[#0d1520] border border-[#1a2840] px-4 py-3 text-white text-sm outline-none
+                        focus:border-[#00e5ff] transition-colors" style="font-family:'Outfit',sans-serif"/>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold tracking-[0.18em] uppercase text-slate-500 mb-2">Service Needed</label>
+        <select class="w-full bg-[#0d1520] border border-[#1a2840] px-4 py-3 text-slate-300 text-sm outline-none
+                       focus:border-[#00e5ff] transition-colors appearance-none" style="font-family:'Outfit',sans-serif">
+          <option value="">Select a service...</option>
+          <option>Video Editing</option>
+          <option>Event Coverage</option>
+          <option>Graphic Design</option>
+          <option>Website Development</option>
+          <option>Brand Commercial</option>
+          <option>Social Media Content</option>
+          <option>Multiple Services</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold tracking-[0.18em] uppercase text-slate-500 mb-2">Project Details</label>
+        <textarea rows="4" placeholder="Tell me about your project, event date, and budget..."
+                  class="w-full bg-[#0d1520] border border-[#1a2840] px-4 py-3 text-white text-sm outline-none
+                         focus:border-[#00e5ff] transition-colors resize-none" style="font-family:'Outfit',sans-serif"></textarea>
+      </div>
+      <button type="submit" id="submitBtn"
+              class="w-full bg-[#00e5ff] text-[#05080d] py-4 font-bold text-sm tracking-[0.12em] uppercase
+                     hover:bg-[#f0b429] transition-colors duration-200">
+        Send Message →
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="border-t border-[#1a2840] bg-[#04060a] px-8 py-10">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="font-display text-2xl tracking-widest text-[#00e5ff]">MRNELSSHOTIT</div>
+    <p class="text-slate-600 text-xs tracking-widest text-center">© 2026 Daniel T Megan · All Rights Reserved · Yola, Nigeria</p>
+    <div class="flex gap-3">
+      <a href="#" class="w-9 h-9 border border-[#1a2840] flex items-center justify-center text-slate-500 hover:border-[#00e5ff] hover:text-[#00e5ff] transition-all text-sm">f</a>
+      <a href="#" class="w-9 h-9 border border-[#1a2840] flex items-center justify-center text-slate-500 hover:border-[#00e5ff] hover:text-[#00e5ff] transition-all text-sm">in</a>
+      <a href="#" class="w-9 h-9 border border-[#1a2840] flex items-center justify-center text-slate-500 hover:border-[#00e5ff] hover:text-[#00e5ff] transition-all text-sm">ig</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a href="https://wa.me/2349032680961" target="_blank"
+   class="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-[#25d366] flex items-center justify-center
+          shadow-[0_4px_24px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_8px_40px_rgba(37,211,102,0.6)]
+          transition-all duration-200">
+  <svg viewBox="0 0 24 24" class="w-7 h-7 fill-white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+</a>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '✓ Message Sent!';
+  btn.classList.replace('bg-[#00e5ff]', 'bg-green-500');
+  setTimeout(() => { btn.textContent = 'Send Message →'; btn.classList.replace('bg-green-500','bg-[#00e5ff]'); }, 3000);
+}
+</script>
+</body>
+</html>
